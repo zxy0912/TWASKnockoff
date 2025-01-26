@@ -58,9 +58,7 @@ TwasKnockoff <- function(snpidx, ye, Xe, summarystat, Xp, removemethod = 'lasso'
     best_lambda <- lasso_cv$lambda.min
     lasso_mod = glmnet(X1, ye[[geneid]], alpha = 0.5, lambda = best_lambda)
 
-    # print(best_lambda)
-    # print(paste(geneid,":",which(lasso_mod$beta!=0)))
-    causal_snp <- ind_gene[which(lasso_mod$beta!=0)]
+    causal_snp <- ind_gene[which(lasso_mod$beta[, 1] != 0)]
     # print(lasso_mod$beta[which(lasso_mod$beta!=0)])
 
     if(length(causal_snp)>0){
@@ -160,7 +158,7 @@ TwasKnockoff <- function(snpidx, ye, Xe, summarystat, Xp, removemethod = 'lasso'
         # Best lambda value
         best_lambda <- lasso_cv$lambda.min
         lasso_mod = glmnet(X1, ye_tem, alpha = 0.5, lambda = best_lambda)
-        causal_snp <- which(lasso_mod$beta!=0)
+        causal_snp <- which(lasso_mod$beta[, 1] != 0)
 
 
         if(length(causal_snp)>0){
@@ -230,7 +228,7 @@ TwasKnockoff <- function(snpidx, ye, Xe, summarystat, Xp, removemethod = 'lasso'
 
   lambda <- lambda_r
   print(paste0("lambda",lambda))
-  LD_modi <- (1-lambda)*LD_new + lambda*diag(nrow(LD_new))
+  LD_modi <- (1-lambda)*LD_new + lambda*Matrix::diag(nrow(LD_new))
   n.study <- nrow(Xp)
   zscores <- matrix(as.vector(z_all), ncol=1)
 
@@ -246,7 +244,7 @@ TwasKnockoff <- function(snpidx, ye, Xe, summarystat, Xp, removemethod = 'lasso'
     }
   }else{
     fit.prelim <- GhostKnockoff.prelim(LD_modi, M=1, method=appr, max.size=100)
-    print(paste("s:",diag(fit.prelim$diag_s)[1:5]))
+    print(paste("s:",Matrix::diag(fit.prelim$diag_s)[1:5]))
     GK.stat<-GhostKnockoff.fit(zscores, n.study, fit.prelim, method=ts, type='fdr', M.fwer=1)
     if(gene_fdr == 'gene'){
       GK.filter<-GhostKnockoff.filter(GK.stat$T_0[[1]][1:k],GK.stat$T_k[[1]][1:k,])

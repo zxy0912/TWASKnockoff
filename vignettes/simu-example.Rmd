@@ -1,0 +1,48 @@
+---
+title: "Simulation Example"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Simulation Example}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(TWASKnockoff)
+```
+
+check the data
+
+```{r}
+str(data)
+```
+
+run TWASKnockoff
+
+```{r}
+set.seed(100)
+
+snpidx = data$snpidx
+ye = data$ye
+yep = data$yep
+Xe = data$Xe
+summarystat = data$summary_stats
+Xp = data$Xp
+yep_true <- data$yep_true
+
+
+correlation = 'improved'
+ts = 'marginal'
+
+TwasKnockoff(snpidx = snpidx, ye = ye, Xe = Xe, 
+             summarystat = summarystat, Xp = Xp, 
+             removemethod = 'lasso', 
+             correlation = correlation, nrep = 10, ts = ts, yep_true = yep_true)
+```
