@@ -12,6 +12,8 @@ Encoding: UTF-8
 LazyData: true
 URL: https://github.com/zxy0912/TWASKnockoff
 BugReports: https://github.com/zxy0912/TWASKnockoff/issues
+Suggest:
+    rmarkdown
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
 Imports:
