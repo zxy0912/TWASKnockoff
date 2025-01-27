@@ -66,7 +66,19 @@
     
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/zxy0912/TWASKnockoff" class="external-link">TWASKnockoff</a></span><span class="op">)</span></span></code></pre></div>
-<p>check the data</p>
+<p>We generate individual-level gene expression levels and phenotypes
+based on 503 non-overlapping Europeans from 1000 Genomes (1KG) phase 3
+(<a href="https://www.cog-genomics.org/plink/2.0/resources" class="external-link uri">https://www.cog-genomics.org/plink/2.0/resources</a>). We
+simulate a risk region including 950 cis-SNPs and 5 candidate genes.
+Each gene contains 100 cis-SNPs, including 2 eQTLs explaining 20%
+variation of gene expression levels. Only the first gene is causal to
+the trait of interest, explaining 50% of total heritability, which is
+set to 0.2. The remaining heritability is explained by 5 non-mediated
+causal SNPs.</p>
+<p>We calculate the summary statistics (z-scores) for each cis-SNP in
+the risk region based on simulated phenotype and in-sample genotype
+data. For this example, we used the in-sample genotype to replace the
+reference panel.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">data</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 14</span></span>
@@ -143,17 +155,22 @@
 <span><span class="co">#&gt;   ..- attr(*, "dimnames")=List of 2</span></span>
 <span><span class="co">#&gt;   .. ..$ : chr [1:2] "indp" ""</span></span>
 <span><span class="co">#&gt;   .. ..$ : NULL</span></span></code></pre></div>
-<p>run TWASKnockoff</p>
+<p>We run TWASKnockoff with the following code:</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">100</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">snpidx</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">snpidx</span></span>
-<span><span class="va">ye</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">ye</span></span>
-<span><span class="va">yep</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">yep</span></span>
-<span><span class="va">Xe</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">Xe</span></span>
-<span><span class="va">summarystat</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">summary_stats</span></span>
-<span><span class="va">Xp</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">Xp</span></span>
-<span><span class="va">yep_true</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">yep_true</span></span>
+<span><span class="co"># indices of cis-variants for each candidate gene in the risk region</span></span>
+<span><span class="va">snpidx</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">snpidx</span> </span>
+<span><span class="co"># gene expression levels for each gene in the eQTL study</span></span>
+<span><span class="va">ye</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">ye</span> </span>
+<span><span class="co"># cis-genotype matrices for each gene in the eQTL study</span></span>
+<span><span class="va">Xe</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">Xe</span> </span>
+<span><span class="co"># summary statistics for cis-SNPs in the risk region</span></span>
+<span><span class="va">summarystat</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">summary_stats</span> </span>
+<span><span class="co"># cis-genotype matrix from reference panel for the risk region</span></span>
+<span><span class="va">Xp</span> <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">Xp</span> </span>
+<span><span class="co"># predicted gene expression levels based on the eQTL model in the reference panel</span></span>
+<span><span class="va">yep_true</span> <span class="op">&lt;-</span> <span class="va">data</span><span class="op">$</span><span class="va">yep_true</span> </span>
 <span></span>
 <span></span>
 <span><span class="va">correlation</span> <span class="op">=</span> <span class="st">'improved'</span></span>
@@ -163,11 +180,6 @@
 <span>             summarystat <span class="op">=</span> <span class="va">summarystat</span>, Xp <span class="op">=</span> <span class="va">Xp</span>, </span>
 <span>             removemethod <span class="op">=</span> <span class="st">'lasso'</span>, </span>
 <span>             correlation <span class="op">=</span> <span class="va">correlation</span>, nrep <span class="op">=</span> <span class="fl">10</span>, ts <span class="op">=</span> <span class="va">ts</span>, yep_true <span class="op">=</span> <span class="va">yep_true</span><span class="op">)</span></span>
-<span><span class="co">#&gt; [1] 0.9917311</span></span>
-<span><span class="co">#&gt; [1] 0.7946139</span></span>
-<span><span class="co">#&gt; [1] 0.9889559</span></span>
-<span><span class="co">#&gt; [1] 0.9950364</span></span>
-<span><span class="co">#&gt; [1] 0.8784016</span></span>
 <span><span class="co">#&gt; [1] "starting iteration 2"</span></span>
 <span><span class="co">#&gt; [1] "starting iteration 3"</span></span>
 <span><span class="co">#&gt; [1] "starting iteration 4"</span></span>
@@ -181,8 +193,8 @@
 <span><span class="co">#&gt; [1] "lambda0.1"</span></span>
 <span><span class="co">#&gt; Warning in if (class(V.left) == "try-error") {: the condition has length &gt; 1</span></span>
 <span><span class="co">#&gt; and only the first element will be used</span></span>
-<span><span class="co">#&gt; [1] "s: 0.292770749989371" "s: 0.629306473123635" "s: 0.408619782539066"</span></span>
-<span><span class="co">#&gt; [4] "s: 0.238543036716131" "s: 0.863653162336012"</span></span>
+<span><span class="co">#&gt; [1] "s: 0.292770749989659" "s: 0.629306473123514" "s: 0.408619782539088"</span></span>
+<span><span class="co">#&gt; [4] "s: 0.238543036716141" "s: 0.863653162335963"</span></span>
 <span><span class="co">#&gt; [[1]]</span></span>
 <span><span class="co">#&gt; [[1]]$T_0</span></span>
 <span><span class="co">#&gt; [[1]]$T_0[[1]]</span></span>
@@ -1182,13 +1194,13 @@
 <span><span class="co">#&gt; [161] 5.176325e+00 6.069400e-01 1.008953e+00 2.766587e-01 1.905981e-01</span></span>
 <span><span class="co">#&gt; [166] 8.625203e-02 1.175924e-01 1.013281e+00 2.938847e-01 1.542031e+00</span></span>
 <span><span class="co">#&gt; [171] 1.480990e-04 1.397964e-01 3.506708e-01 2.436287e-01 1.375532e-01</span></span>
-<span><span class="co">#&gt; [176] 1.047671e-01 3.184714e-01 6.718748e-02 9.174050e-01 4.525133e-04</span></span>
+<span><span class="co">#&gt; [176] 1.047671e-01 3.184714e-01 6.718748e-02 9.174050e-01 4.525132e-04</span></span>
 <span><span class="co">#&gt; [181] 6.020146e-01 9.157316e-01 3.788718e-04 6.033789e-01 1.794293e+00</span></span>
 <span><span class="co">#&gt; [186] 6.018352e-01 1.180355e-01 1.171719e-01 2.275868e-01 5.882209e-01</span></span>
 <span><span class="co">#&gt; [191] 1.504189e+00 8.255580e-01 1.505539e+00 8.252103e-01 1.267830e-01</span></span>
 <span><span class="co">#&gt; [196] 7.930923e-01 1.504603e+00 8.247516e-01 8.246096e-01 8.242393e-01</span></span>
 <span><span class="co">#&gt; [201] 3.401107e-01 2.453883e-01 2.449035e-01 2.472174e-01 2.467608e-01</span></span>
-<span><span class="co">#&gt; [206] 7.197347e-02 4.589950e-02 7.918681e-03 4.858532e-01 7.376911e-03</span></span>
+<span><span class="co">#&gt; [206] 7.197347e-02 4.589950e-02 7.918681e-03 4.858532e-01 7.376910e-03</span></span>
 <span><span class="co">#&gt; [211] 4.555672e-01 2.798183e-01 8.290869e-01 2.453463e-01 7.023265e-03</span></span>
 <span><span class="co">#&gt; [216] 7.283224e-02 2.453097e-01 1.393591e-03 8.393245e-03 1.305030e-01</span></span>
 <span><span class="co">#&gt; [221] 1.969776e-01 9.562492e-01 7.288421e-02 5.373230e-01 5.807251e-02</span></span>
@@ -1212,7 +1224,7 @@
 <span><span class="co">#&gt; [311] 1.192367e-01 8.143048e-02 1.865839e-02 1.218936e-01 1.203574e-01</span></span>
 <span><span class="co">#&gt; [316] 2.373818e+00 1.203863e-01 1.234891e-02 1.077965e+01 3.297501e-01</span></span>
 <span><span class="co">#&gt; [321] 1.196308e-01 7.492052e-01 3.291317e-01 5.342663e-01 4.008694e-02</span></span>
-<span><span class="co">#&gt; [326] 3.292222e-01 6.943373e-02 3.271355e-01 1.244647e+00 3.284410e-01</span></span>
+<span><span class="co">#&gt; [326] 3.292222e-01 6.943373e-02 3.271354e-01 1.244647e+00 3.284410e-01</span></span>
 <span><span class="co">#&gt; [331] 1.007593e+00 1.071497e-01 3.283333e-01 5.832181e+00 4.706571e-01</span></span>
 <span><span class="co">#&gt; [336] 9.674000e-01 6.447003e-01 1.150946e+00 9.071618e-01 5.105304e+00</span></span>
 <span><span class="co">#&gt; [341] 1.872393e+00 1.948456e+00 2.574327e-01 8.522926e-01 5.451655e+00</span></span>
@@ -1296,13 +1308,13 @@
 <span><span class="co">#&gt; [161] 5.176325e+00 6.069400e-01 1.008953e+00 2.766587e-01 1.905981e-01</span></span>
 <span><span class="co">#&gt; [166] 8.625203e-02 1.175924e-01 1.013281e+00 2.938847e-01 1.542031e+00</span></span>
 <span><span class="co">#&gt; [171] 1.480990e-04 1.397964e-01 3.506708e-01 2.436287e-01 1.375532e-01</span></span>
-<span><span class="co">#&gt; [176] 1.047671e-01 3.184714e-01 6.718748e-02 9.174050e-01 4.525133e-04</span></span>
+<span><span class="co">#&gt; [176] 1.047671e-01 3.184714e-01 6.718748e-02 9.174050e-01 4.525132e-04</span></span>
 <span><span class="co">#&gt; [181] 6.020146e-01 9.157316e-01 3.788718e-04 6.033789e-01 1.794293e+00</span></span>
 <span><span class="co">#&gt; [186] 6.018352e-01 1.180355e-01 1.171719e-01 2.275868e-01 5.882209e-01</span></span>
 <span><span class="co">#&gt; [191] 1.504189e+00 8.255580e-01 1.505539e+00 8.252103e-01 1.267830e-01</span></span>
 <span><span class="co">#&gt; [196] 7.930923e-01 1.504603e+00 8.247516e-01 8.246096e-01 8.242393e-01</span></span>
 <span><span class="co">#&gt; [201] 3.401107e-01 2.453883e-01 2.449035e-01 2.472174e-01 2.467608e-01</span></span>
-<span><span class="co">#&gt; [206] 7.197347e-02 4.589950e-02 7.918681e-03 4.858532e-01 7.376911e-03</span></span>
+<span><span class="co">#&gt; [206] 7.197347e-02 4.589950e-02 7.918681e-03 4.858532e-01 7.376910e-03</span></span>
 <span><span class="co">#&gt; [211] 4.555672e-01 2.798183e-01 8.290869e-01 2.453463e-01 7.023265e-03</span></span>
 <span><span class="co">#&gt; [216] 7.283224e-02 2.453097e-01 1.393591e-03 8.393245e-03 1.305030e-01</span></span>
 <span><span class="co">#&gt; [221] 1.969776e-01 9.562492e-01 7.288421e-02 5.373230e-01 5.807251e-02</span></span>
@@ -1326,7 +1338,7 @@
 <span><span class="co">#&gt; [311] 1.192367e-01 8.143048e-02 1.865839e-02 1.218936e-01 1.203574e-01</span></span>
 <span><span class="co">#&gt; [316] 2.373818e+00 1.203863e-01 1.234891e-02 1.077965e+01 3.297501e-01</span></span>
 <span><span class="co">#&gt; [321] 1.196308e-01 7.492052e-01 3.291317e-01 5.342663e-01 4.008694e-02</span></span>
-<span><span class="co">#&gt; [326] 3.292222e-01 6.943373e-02 3.271355e-01 1.244647e+00 3.284410e-01</span></span>
+<span><span class="co">#&gt; [326] 3.292222e-01 6.943373e-02 3.271354e-01 1.244647e+00 3.284410e-01</span></span>
 <span><span class="co">#&gt; [331] 1.007593e+00 1.071497e-01 3.283333e-01 5.832181e+00 4.706571e-01</span></span>
 <span><span class="co">#&gt; [336] 9.674000e-01 6.447003e-01 1.150946e+00 9.071618e-01 5.105304e+00</span></span>
 <span><span class="co">#&gt; [341] 1.872393e+00 1.948456e+00 2.574327e-01 8.522926e-01 5.451655e+00</span></span>
@@ -1429,6 +1441,7 @@
 <span><span class="co">#&gt; [[3]]</span></span>
 <span><span class="co">#&gt;  [1] 159 192 197 199 202 263 264 286 300 301 302 328 336 339 340 341 350 355 360</span></span>
 <span><span class="co">#&gt; [20] 465 498 508 527 531 532 621 622 664 666 745 750 752 753 787 797 800 829 836</span></span></code></pre></div>
+<p>The</p>
   </main>
 </div>
 
