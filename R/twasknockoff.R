@@ -1,15 +1,25 @@
 #' TWAS Knockoff main function
-#' @param snpidx SNP index
-#' @param simu if simu = TRUE, will print the correlation between predicted_ye and yep_true
-#' @param ts test statistic
-#' @param reduced if TRUE, only consider the SNPs within the genes
-#' @param gene_fdr 'gene': only use genes for fdr control, 'genesnp', use all variables for fdr control
+#' @param snpidx A list of numeric vectors, storing the indices of cis-variants for each candidate gene in the risk region.
+#' @param ye A list of numeric vectors, storing the gene expression levels for each gene in the eQTL study.
+#' @param Xe A list of matrices, storing the cis-genotype matrices for each gene in the eQTL study.
+#' @param summarystat Summary statistics for cis-SNPs in the risk region.
+#' @param Xp The cis-genotype matrix from GWAS data or reference panel for the risk region.
+#' @param removemethod If 'lasso', remove the significant variants (eQTLs) detected in the gene expression prediction model.
+#' @param simu If TRUE, print the correlation between predicted gene expression levels and true gene expression levels given as input via yep_true.
+#' @param reduced If TRUE, only consider the cis-SNPs within each gene; if FALSE, consider all cis-SNPs in the risk region.
+#' @param lambda_r Parameter for the regularization of correlation matrix.
+#' @param correlation If 'improved', apply the improved correlation matrix estimation via bootstrap sample.
+#' @param nrep Number of bootstrap samples (including the original copy).
+#' @param ts Test statistic for knockoffs, selected from {'marginal','susie','lasso','lasso.approx.lambda','squared.zscore'}.
+#' @param appr Approximation method for knockoffs.
+#' @param yep_true A list of true gene expression levels for GWAS study, only required when simu = TRUE.
+#' @param gene_fdr If 'gene': only use genes for FDR control; If 'genesnp': use all genetic elements (including genes and cis-SNPs) for FDR control.
 #' @import GhostKnockoff
 #' @import glmnet
 #' @importFrom stats cov2cor as.dist cor
 #' @return a list
 #' @export
-TwasKnockoff <- function(snpidx, ye, Xe, summarystat, Xp, removemethod = 'lasso', simu = TRUE, reduced = TRUE, lambda_r = 0.1,
+TwasKnockoff <- function(snpidx, ye, Xe, summarystat, Xp, removemethod = 'lasso', simu = FALSE, reduced = TRUE, lambda_r = 0.1,
                          correlation = 'improved', nrep = 10, ts = 'lasso',appr = 'sdp', yep_true = NULL, gene_fdr = 'genesnp'){
 
 

@@ -18,24 +18,31 @@ knitr::opts_chunk$set(
 library(TWASKnockoff)
 ```
 
-check the data
+We generate individual-level gene expression levels and phenotypes based on 503 non-overlapping Europeans from 1000 Genomes (1KG) phase 3 (https://www.cog-genomics.org/plink/2.0/resources). We simulate a risk region including 950 cis-SNPs and 5 candidate genes. Each gene contains 100 cis-SNPs, including 2 eQTLs explaining 20% variation of gene expression levels. Only the first gene is causal to the trait of interest, explaining 50% of total heritability, which is set to 0.2. The remaining heritability is explained by 5 non-mediated causal SNPs.
+
+We calculate the summary statistics (z-scores) for each cis-SNP in the risk region based on simulated phenotype and in-sample genotype data. For this example, we used the in-sample genotype to replace the reference panel.
 
 ```{r}
 str(data)
 ```
 
-run TWASKnockoff
+We run TWASKnockoff with the following code:
 
 ```{r}
 set.seed(100)
 
-snpidx = data$snpidx
-ye = data$ye
-yep = data$yep
-Xe = data$Xe
-summarystat = data$summary_stats
-Xp = data$Xp
-yep_true <- data$yep_true
+# indices of cis-variants for each candidate gene in the risk region
+snpidx = data$snpidx 
+# gene expression levels for each gene in the eQTL study
+ye = data$ye 
+# cis-genotype matrices for each gene in the eQTL study
+Xe = data$Xe 
+# summary statistics for cis-SNPs in the risk region
+summarystat = data$summary_stats 
+# cis-genotype matrix from reference panel for the risk region
+Xp = data$Xp 
+# predicted gene expression levels based on the eQTL model in the reference panel
+yep_true <- data$yep_true 
 
 
 correlation = 'improved'
@@ -46,3 +53,5 @@ TwasKnockoff(snpidx = snpidx, ye = ye, Xe = Xe,
              removemethod = 'lasso', 
              correlation = correlation, nrep = 10, ts = ts, yep_true = yep_true)
 ```
+
+The 
