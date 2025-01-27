@@ -11,7 +11,7 @@ TwasKnockoff(
   summarystat,
   Xp,
   removemethod = "lasso",
-  simu = TRUE,
+  simu = FALSE,
   reduced = TRUE,
   lambda_r = 0.1,
   correlation = "improved",
@@ -23,15 +23,35 @@ TwasKnockoff(
 )
 }
 \arguments{
-\item{snpidx}{SNP index}
+\item{snpidx}{A list of numeric vectors, storing the indices of cis-variants for each candidate gene in the risk region.}
 
-\item{simu}{if simu = TRUE, will print the correlation between predicted_ye and yep_true}
+\item{ye}{A list of numeric vectors, storing the gene expression levels for each gene in the eQTL study.}
 
-\item{reduced}{if TRUE, only consider the SNPs within the genes}
+\item{Xe}{A list of matrices, storing the cis-genotype matrices for each gene in the eQTL study.}
 
-\item{ts}{test statistic}
+\item{summarystat}{Summary statistics for cis-SNPs in the risk region.}
 
-\item{gene_fdr}{'gene': only use genes for fdr control, 'genesnp', use all variables for fdr control}
+\item{Xp}{The cis-genotype matrix from GWAS data or reference panel for the risk region.}
+
+\item{removemethod}{If 'lasso', remove the significant variants (eQTLs) detected in the gene expression prediction model.}
+
+\item{simu}{If TRUE, print the correlation between predicted gene expression levels and true gene expression levels given as input via yep_true.}
+
+\item{reduced}{If TRUE, only consider the cis-SNPs within each gene; if FALSE, consider all cis-SNPs in the risk region.}
+
+\item{lambda_r}{Parameter for the regularization of correlation matrix.}
+
+\item{correlation}{If 'improved', apply the improved correlation matrix estimation via bootstrap sample.}
+
+\item{nrep}{Number of bootstrap samples (including the original copy).}
+
+\item{ts}{Test statistic for knockoffs, selected from {'marginal','susie','lasso','lasso.approx.lambda','squared.zscore'}.}
+
+\item{appr}{Approximation method for knockoffs.}
+
+\item{yep_true}{A list of true gene expression levels for GWAS study, only required when simu = TRUE.}
+
+\item{gene_fdr}{If 'gene': only use genes for FDR control; If 'genesnp': use all genetic elements (including genes and cis-SNPs) for FDR control.}
 }
 \value{
 a list
