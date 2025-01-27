@@ -31,6 +31,8 @@ We run TWASKnockoff with the following code:
 ```{r}
 set.seed(100)
 
+# number of genes
+k = length(data$ye)
 # indices of cis-variants for each candidate gene in the risk region
 snpidx = data$snpidx 
 # gene expression levels for each gene in the eQTL study
@@ -48,10 +50,14 @@ yep_true <- data$yep_true
 correlation = 'improved'
 ts = 'marginal'
 
-TwasKnockoff(snpidx = snpidx, ye = ye, Xe = Xe, 
+result = TwasKnockoff(snpidx = snpidx, ye = ye, Xe = Xe, 
              summarystat = summarystat, Xp = Xp, 
              removemethod = 'lasso', 
              correlation = correlation, nrep = 10, ts = ts, yep_true = yep_true)
+
+print(result$GK.filter$kappa[1:k])
+print(result$GK.filter$tau[1:k])
+print(result$GK.filter$q[1:k])
 ```
 
 The 

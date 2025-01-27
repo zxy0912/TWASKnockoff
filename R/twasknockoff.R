@@ -17,7 +17,7 @@
 #' @import GhostKnockoff
 #' @import glmnet
 #' @importFrom stats cov2cor as.dist cor
-#' @return a list
+#' @return A list of three elements, the first element contains test statistics for all genetic elements, the second element contains q-values and knockoff statistics similar to GhostKnockoff, the third element contains SNPs removed from the knockoff procedure (i.e., significant SNPs in gene expression prediction models)
 #' @export
 TwasKnockoff <- function(snpidx, ye, Xe, summarystat, Xp, removemethod = 'lasso', simu = FALSE, reduced = TRUE, lambda_r = 0.1,
                          correlation = 'improved', nrep = 10, ts = 'lasso',appr = 'sdp', yep_true = NULL, gene_fdr = 'genesnp'){
@@ -263,7 +263,7 @@ TwasKnockoff <- function(snpidx, ye, Xe, summarystat, Xp, removemethod = 'lasso'
     }
   }
 
-  data <- list(GK.stat, GK.filter, removelist0)
+  data <- list(GK.stat = GK.stat, GK.filter = GK.filter, removed_list = unique(removelist0))
 
   return(data)
 
