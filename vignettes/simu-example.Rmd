@@ -60,4 +60,3 @@ print(result$GK.filter$tau[1:k])
 print(result$GK.filter$q[1:k])
 ```
 
-The 
