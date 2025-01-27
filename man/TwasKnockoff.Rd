@@ -54,7 +54,7 @@ TwasKnockoff(
 \item{gene_fdr}{If 'gene': only use genes for FDR control; If 'genesnp': use all genetic elements (including genes and cis-SNPs) for FDR control.}
 }
 \value{
-a list
+A list of three elements, the first element contains test statistics for all genetic elements, the second element contains q-values and knockoff statistics similar to GhostKnockoff, the third element contains SNPs removed from the knockoff procedure (i.e., significant SNPs in gene expression prediction models)
 }
 \description{
 TWAS Knockoff main function
