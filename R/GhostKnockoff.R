@@ -59,7 +59,7 @@ GhostKnockoff.prelim<-function(cor.G, M=5, method='sdp', max.size=500, corr_max=
 
     #diag(V)<-diag(V)+rep(s,M)
     V.left<-try(t(chol(V)),silent=T)
-    if(class(V.left)=="try-error"){
+    if (any(class(V.left)=="try-error")){
       eigen.fit<-eigen(V)
       newEig <- ifelse(eigen.fit$values < 1e-5, 1e-5, eigen.fit$values)
       newMat <- eigen.fit$vectors %*% (newEig*t(eigen.fit$vectors))
