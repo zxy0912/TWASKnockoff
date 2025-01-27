@@ -204,6 +204,15 @@ reference panel.</p>
 <span><span class="co">#&gt; [1] 20.2166355  0.4486120  0.5636451  1.7250568  2.8037662</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">GK.filter</span><span class="op">$</span><span class="va">q</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="va">k</span><span class="op">]</span><span class="op">)</span></span>
 <span><span class="co">#&gt; [1] 0.3333333 1.0000000 1.0000000 1.0000000 1.0000000</span></span></code></pre></div>
+<p>We obtain the knockoff statistics defined in the GhostKnockoff
+manuscript, as well as the q-values for all genetic elements. We focus
+on the first
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+elements, corresponding to the result of
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mi>k</mi><annotation encoding="application/x-tex">k</annotation></semantics></math>
+genes. The first gene (the true causal gene) has a large
+<math display="inline" xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mi>a</mi><mi>u</mi></mrow><annotation encoding="application/x-tex">tau</annotation></semantics></math>
+value and a small q-value.</p>
   </main>
 </div>
 

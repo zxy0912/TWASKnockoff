@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   simu-example: simu-example.html
-last_built: 2025-01-27T02:44Z
+last_built: 2025-01-27T02:50Z
 urls:
   reference: https://zxy0912.github.io/TWASKnockoff/reference
   article: https://zxy0912.github.io/TWASKnockoff/articles
