@@ -60,3 +60,4 @@ print(result$GK.filter$tau[1:k])
 print(result$GK.filter$q[1:k])
 ```
 
+We obtain the knockoff statistics defined in the GhostKnockoff manuscript, as well as the q-values for all genetic elements. We focus on the first $k$ elements, corresponding to the result of $k$ genes. The first gene (the true causal gene) has a large $tau$ value and a small q-value.
