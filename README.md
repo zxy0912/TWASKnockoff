@@ -1,6 +1,6 @@
 # TWASKnockoff: A Knockoff-based Framework for Causal Genes Identifications
 
-> Xiangyu Zhang, Lijun Wang, Jia Zhao, Hongyu Zhao (2025). Knockoff procedure improves causal gene identifications in conditional transcriptome-wide association studies.
+> Xiangyu Zhang, Lijun Wang, Jia Zhao, Hongyu Zhao (2025). Knockoff procedure improves causal gene identifications in conditional transcriptome-wide association studies. bioRxiv 2025.02.05.636660; doi: https://doi.org/10.1101/2025.02.05.636660
 
 ![](https://github.com/user-attachments/assets/f184d88c-2421-4013-8346-85bf02ec6c4c)
 
